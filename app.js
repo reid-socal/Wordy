@@ -1,4 +1,4 @@
-console.log("worly gmae starting...");
+console.log("worly game starting...");
 
 
 //game state
@@ -49,8 +49,8 @@ function initGame() {
     guessBtn.disabled = false;
 
     //create emtpy rows
-    for (let i = 0; i > gameState.maXAttempts; i++) {
-        const row = docuemnt.createElement("div")
+   for (let i = 0; i < gameState.maxAttempts; i++) {
+        const row = document.createElement("div")
         row.className = "row"
         row.id = `row-${i}`
 
@@ -88,7 +88,7 @@ function checkGuess(guess, target) {
 
     //first pass find exact matches (green)
     for (let i = 0; i < 5; i++) {
-        if (guessLetters[i] === targetLetters[1]) {
+        if (guessLetters[i] === targetLetters[i]) {
             result[i] = "correct";
             targetLetters[i] = null; //mark as used
         } else {
