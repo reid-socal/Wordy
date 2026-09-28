@@ -1,0 +1,140 @@
+/* ========== WORDLY STYLES ========== */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Segoe UI', Arial, sans-serif;
+background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+min-height: 100vh;
+color: #fff;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 20px;
+}
+header {
+text-align: center;
+margin-bottom: 30px;
+}
+header h1 {
+font-size: 2.5rem;
+margin-bottom: 10px;
+}
+header p {
+color: #aaa;
+}
+/* Game Board */
+.game-board {
+display: flex;
+flex-direction: column;
+gap: 8px;
+margin-bottom: 30px;
+}
+.row {
+display: flex;
+gap: 8px;
+}
+.cell {
+width: 60px;
+height: 60px;
+border: 2px solid #3a3a5a;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+font-weight: bold;
+text-transform: uppercase;
+transition: all 0.3s ease;
+}
+.cell.correct {
+background-color: #538d4e;
+border-color: #538d4e;
+}
+.cell.present {
+background-color: #b59f3b;
+border-color: #b59f3b;
+}
+.cell.absent {
+background-color: #3a3a5a;
+border-color: #3a3a5a;
+}
+/* Input Area */
+.input-area {
+display: flex;
+gap: 10px;
+margin-bottom: 20px;
+}
+#guess-input {
+padding: 12px 20px;
+font-size: 1.2rem;
+border: 2px solid #3a3a5a;
+border-radius: 8px;
+background: #1a1a2e;
+color: #fff;
+text-transform: uppercase;
+width: 200px;
+}
+#guess-input:focus {
+outline: none;
+border-color: #538d4e;
+}
+
+#guess-btn {
+padding: 12px 30px;
+font-size: 1.2rem;
+background: #538d4e;
+color: #fff;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: background 0.3s;
+}
+#guess-btn:hover {
+background: #6aa85e;
+}
+#guess-btn:disabled {
+background: #3a3a5a;
+cursor: not-allowed;
+}
+
+/* Message */
+.message {
+font-size: 1.2rem;
+margin-bottom: 20px;
+min-height: 30px;
+}
+.message.win {
+color: #538d4e;
+}
+.message.lose {
+color: #e74c3c;
+}
+/* Stats */
+.stats {
+display: flex;
+gap: 30px;
+margin-bottom: 20px;
+color: #aaa;
+}
+/* New Game Button */
+.new-game {
+padding: 12px 30px;
+font-size: 1rem;
+background: transparent;
+color: #fff;
+border: 2px solid #3a3a5a;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.3s;
+}
+.new-game:hover {
+background: #3a3a5a;
+}
+/* Footer */
+footer {
+margin-top: auto;
+padding: 20px;
+color: #555;
+}

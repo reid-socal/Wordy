@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Worly - Word Guessing Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1> Wordle </h1>
+        <p>Guess the five letter word in 6 tries</p>
+    </header>
+
+    <main>
+        <!-- Game Board -->
+         <div id="game-board" class="game-board"> 
+         </div>
+        <div class="input-area">
+            <input
+            type="text"
+            id="guess-input"
+            maxlength="5"
+            placeholder="Enter 5 Letter Word"
+            autocomplete="off"
+        >
+      <button id="guess-btn">Guess</button>
+    </div>
+<!--
+     Message Area -->
+    <div id="message" class="message"></div>
+<!--
+     Game Stats -->
+    <div id="stats" class="stats">
+        <p>Attempts: <span id="attempts">0</span>/6</p>
+        <p>Games Won: <span id="wins">0</span></p>
+    </div>
+<!--
+     New Game Button -->
+        <button id="new-game-btn" class="new-game">New Game</button>
+    </main>
+    
+    <footer>
+        <p>&copy; 2026 Wordy - Software Engineering Fundamentals</p>
+    </footer>
+    
+    <script src="app.js"></script>
+</body>
+</html>
