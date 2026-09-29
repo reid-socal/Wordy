@@ -10,15 +10,23 @@ const gameState = {
   wins: 0
 };
 
+
+// const WORD_LIST = [
+//   "apple", "brave", "crane", "drive", "eagle",
+//   "flame", "grape", "house", "input", "joker",
+//   "knife", "lemon", "music", "noble", "ocean",
+//   "piano", "queen", "radio", "snake", "tiger",
+//   "unity", "voice", "water", "xenon", "yacht",
+//   "zebra"
+// ];
+
 // ========== WORD LIST ==========
 const WORD_LIST = [
-  "apple", "brave", "crane", "drive", "eagle",
-  "flame", "grape", "house", "input", "joker",
-  "knife", "lemon", "music", "noble", "ocean",
-  "piano", "queen", "radio", "snake", "tiger",
-  "unity", "voice", "water", "xenon", "yacht",
-  "zebra"
+  "cindy"
 ];
+
+
+const VALID_SET = new Set([...VALID_GUESSES, ...WORD_LIST]);
 
 // ========== DOM ELEMENTS ==========
 const gameBoard = document.getElementById("game-board");
@@ -84,14 +92,18 @@ function initGame() {
  * Validate the user's guess
  */
 function validateGuess(guess) {
+    if (guess === "trump") {
+    return { valid: false, message: "Don't say his name!" };
+  }
   if (guess.length !== 5) {
     return { valid: false, message: "Word must be 5 letters!" };
   }
-
   if (!/^[a-zA-Z]+$/.test(guess)) {
     return { valid: false, message: "Word must contain only letters!" };
   }
-
+  if (!VALID_SET.has(guess.toLowerCase())) {
+    return { valid: false, message: "Not a valid word" };
+  }
   return { valid: true, message: "" };
 }
 
@@ -140,6 +152,37 @@ function updateBoard(guess, result) {
   }
 }
 
+
+// ========== WIN EFFECTS ==========
+function celebrateWin() {
+  const rowIndex = gameState.currentAttempt - 1; // row that was just filled
+
+  for (let i = 0; i < 5; i++) {
+    const cell = document.getElementById(`cell-${rowIndex}-${i}`);
+    cell.style.animationDelay = `${i * 100}ms`; // stagger the bounce
+    cell.classList.add("win-bounce");
+  }
+
+  launchConfetti();
+}
+
+function launchConfetti(count = 80) {
+  const colors = ["#6aaa64", "#c9b458", "#e74c3c", "#3498db", "#9b59b6"];
+
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti";
+    piece.style.left = `${Math.random() * 100}vw`;
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+    piece.style.animationDelay = `${Math.random() * 0.5}s`;
+    document.body.appendChild(piece);
+
+    piece.addEventListener("animationend", () => piece.remove());
+  }
+}
+
+
 /**
  * Handle the user's guess
  */
@@ -167,7 +210,7 @@ function handleGuess() {
     gameState.status = "won";
     gameState.wins++;
     winsEl.textContent = gameState.wins;
-    messageEl.textContent = "Congratulations! You won!";
+    messageEl.textContent = "You did it", "I LOVE YOU😘";
     messageEl.className = "message win";
     endGame();
   } else if (gameState.currentAttempt >= gameState.maxAttempts) {
