@@ -6,15 +6,60 @@ const gameState = {
     targetWord: "",
     guesses: [],
     currentAttempt: 0,
-    maxAttempts: 6,
+    maxAttempts: 8,
     status: "playing",
     wins: 0
 }
 
 const Word_list = [
-    "apple", "brave", "flour", "glove", "plows", "great"
-
+    "apple", "brave", "flour", "glove", "plows", "great", "crane", "slate", "house", "water",
+    "light", "music", "tiger", "river", "stone", "plant", "bread", "chair", "dream", "eagle",
+    "fruit", "grape", "heart", "juice", "knife", "lemon", "mouse", "night", "ocean", "pearl",
+    "queen", "robot", "smile", "table", "uncle", "vivid", "whale", "youth", "zebra", "cloud",
+    "dance", "earth", "flame", "ghost", "happy", "ivory", "jelly", "beach", "candy", "dairy",
+    "elbow", "feast", "giant", "honey", "image", "joker", "kayak", "laugh", "magic", "noble",
+    "olive", "piano", "quiet", "radio", "sunny", "trail", "ultra", "voice", "waste", "yield",
+    "agent", "blaze", "coast", "drive", "entry", "faith", "grain", "horse", "index", "jumpy",
+    "kneel", "lucky", "march", "nurse", "orbit", "paint", "quest", "raise", "shore", "tooth",
+    "unity", "value", "watch", "yacht", "zesty", "adult", "blend", "cabin", "delta", "equal",
+    "fever", "grace", "hotel", "input", "judge", "karma", "lunar", "medal", "novel", "oasis",
+    "pilot", "quilt", "ranch", "scale", "tower", "urban", "vapor", "wheat", "young", "actor",
+    "brick", "climb", "diner", "event", "frost", "grill", "hobby", "ideal", "jewel", "koala",
+    "lobby", "lodge", "mango", "nerve", "onion", "pixel", "quack", "ridge", "sugar", "tulip",
+    "usual", "vault", "woman", "angel", "boost", "charm", "drain", "elite", "flair", "gauge",
+    "haste", "inbox", "joint", "knock", "lever", "mercy", "north", "ounce", "plaza", "quote",
+    "rebel", "shirt", "thumb", "unite", "video", "wrist", "yeast", "alarm", "bench", "chest",
+    "doubt", "ember", "field", "glass", "hound", "irony", "joust", "kiosk", "lemur", "mixer",
+    "nymph", "occur", "prize", "quart", "relax", "sheep", "trend", "upset", "vital", "world",
+    "brush", "clock", "dwarf", "error", "flint", "grasp", "hedge", "inner", "jolly", "knelt",
+    "latch", "minor", "niche", "oxide", "plumb", "quirk", "rival", "spine", "twist", "usher",
+    "viper", "wager", "yearn", "amber", "birth", "cycle", "depth", "evade", "fancy", "globe",
+    "haven", "inlet", "jazzy", "kebab", "llama", "motor", "nylon", "opera", "prism", "quake",
+    "ratio", "slope", "thorn", "unfit", "valve", "waltz", "adopt", "badge", "crisp", "dodge",
+    "extra", "fable", "guest", "hurry", "icing", "jumbo", "lofty", "moist", "noisy", "oddly"
 ]
+
+
+const wordCache = new Map();
+let checking = false;
+
+async function isRealWord(word) {
+    if (Word_list.includes(word)) return true;
+    if (wordCache.has(word)) return wordCache.get(word);
+
+    try {
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        if (res.status === 404) {
+            wordCache.set(word, false);
+            return false;
+        }
+        if (!res.ok) return true; // API trouble, don't block the player
+        wordCache.set(word, true);
+        return true;
+    } catch (err) {
+        return true; // network error, don't block the player
+    }
+}
 
 //dom elements
 const gameBoard = document.getElementById("game-board");
@@ -49,7 +94,7 @@ function initGame() {
     guessBtn.disabled = false;
 
     //create emtpy rows
-   for (let i = 0; i < gameState.maxAttempts; i++) {
+    for (let i = 0; i < gameState.maxAttempts; i++) {
         const row = document.createElement("div")
         row.className = "row"
         row.id = `row-${i}`
