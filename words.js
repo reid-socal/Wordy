@@ -1,4 +1,4 @@
-const VALID_GUESSES = new Set([
+const VALID_GUESSES = [
 "aahed",
 "aalii",
 "aargh",
@@ -12971,4 +12971,4 @@ const VALID_GUESSES = new Set([
 "zygon",
 "zymes",
 "zymic"
-]);
+];
