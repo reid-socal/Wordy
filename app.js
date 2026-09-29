@@ -39,27 +39,7 @@ const Word_list = [
     "extra", "fable", "guest", "hurry", "icing", "jumbo", "lofty", "moist", "noisy", "oddly"
 ]
 
-
-const wordCache = new Map();
-let checking = false;
-
-async function isRealWord(word) {
-    if (Word_list.includes(word)) return true;
-    if (wordCache.has(word)) return wordCache.get(word);
-
-    try {
-        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-        if (res.status === 404) {
-            wordCache.set(word, false);
-            return false;
-        }
-        if (!res.ok) return true; // API trouble, don't block the player
-        wordCache.set(word, true);
-        return true;
-    } catch (err) {
-        return true; // network error, don't block the player
-    }
-}
+Word_list.forEach(w => VALID_GUESSES.add(w));
 
 //dom elements
 const gameBoard = document.getElementById("game-board");
@@ -123,8 +103,26 @@ function validateGuess(guess) {
         return { valid: false, message: "word must contain only letters"}
     }
 
+    if (!VALID_GUESSES.has(guess.toLowerCase())) {
+        return { valid: false, message: "not in word list" };
+    }
+
     return { valid: true, message: ""};
 }
+
+function handleGuess() {
+    const guess = guessInput.value.toLowerCase().trim();
+
+    //validate
+    const validation = validateGuess(guess);
+    if (!validation.valid) {
+        messageEl.textContent = validation.message;
+        return;
+    }
+
+    //check guess
+    const result = checkGuess(guess, gameState.targetWord);
+    gameState.guesses.push({ word: guess, result });
 
 function checkGuess(guess, target) {
     const result = [];
@@ -168,7 +166,8 @@ function updateBoard(guess, result) {
 
 }
 
-function handleGuess() {
+async function handleGuess() {
+    if (checking) return;
     const guess = guessInput.value.toLowerCase().trim();
 
     //validate
@@ -178,9 +177,18 @@ function handleGuess() {
         return;
     }
 
+    //check it's a real word
+    checking = true;
+    messageEl.textContent = "Checking word...";
+    const real = await isRealWord(guess);
+    checking = false;
+    if (!real) {
+        messageEl.textContent = "not in word list";
+        return;
+    }
+
     //check guess
     const result = checkGuess(guess, gameState.targetWord);
-    gameState.guesses.push({ word: guess, result });
 
     //update UI
     updateBoard(guess, result);
