@@ -2016,6 +2016,7 @@ const VALID_GUESSES = [
 "cimex",
 "cinch",
 "cinct",
+"cindy",
 "cines",
 "cinqs",
 "cions",
