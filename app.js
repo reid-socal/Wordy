@@ -10,6 +10,8 @@ const gameState = {
   wins: 0
 };
 
+let confettiTimers = [];
+
 
 // const WORD_LIST = [
 //   "apple", "brave", "crane", "drive", "eagle",
@@ -25,6 +27,9 @@ const WORD_LIST = [
   "cindy"
 ];
 
+const SONG_START = 15;
+const winSong = new Audio("song.m4a");
+winSong.volume = 0.7;   // 0.0 to 1.0
 
 const VALID_SET = new Set([...VALID_GUESSES, ...WORD_LIST]);
 
@@ -39,31 +44,6 @@ const newGameBtn = document.getElementById("new-game-btn");
 
 // ========== GAME FUNCTIONS ==========
 
-// ========== YOUTUBE MUSIC ==========
-let ytPlayer;
-let ytReady = false;
-
-// Load YouTube's player script
-const ytScript = document.createElement("script");
-ytScript.src = "https://www.youtube.com/iframe_api";
-document.head.appendChild(ytScript);
-
-// YouTube calls this by name once its script has loaded
-function onYouTubeIframeAPIReady() {
-  ytPlayer = new YT.Player("yt-player", {
-    width: "320",
-    height: "180",
-    videoId: "7sznJlIgUJI",
-    playerVars: { playsinline: 1 },
-    events: {
-      onReady: () => {
-        ytPlayer.setVolume(60);   // 0 to 100
-        ytReady = true;
-      }
-    }
-  });
-}
-
 
 /**
  * Get a random word from the word list
@@ -77,12 +57,16 @@ function getRandomWord() {
  * Initialize a new game
  */
 function initGame() {
+  confettiTimers.forEach(clearTimeout);
+  confettiTimers = [];
+  document.querySelectorAll(".confetti").forEach(c => c.remove());
   gameState.targetWord = getRandomWord();
   gameState.guesses = [];
   gameState.currentAttempt = 0;
   gameState.status = "playing";
   document.getElementById("win-image-wrap").classList.remove("show");
-  if (ytReady) ytPlayer.pauseVideo();
+  winSong.pause();
+  winSong.currentTime = 0;
 
   console.log("Target word:", gameState.targetWord);
 
@@ -185,11 +169,10 @@ function updateBoard(guess, result) {
 
 // ========== WIN EFFECTS ==========
 function celebrateWin() {
+  winSong.currentTime = SONG_START;   // restart from the beginning each win
+  winSong.play();
   const rowIndex = gameState.currentAttempt - 1;
-      if (ytReady) {
-    ytPlayer.seekTo(0);   // or a start time in seconds, e.g. 42
-    ytPlayer.playVideo();
-  }
+
 
   for (let i = 0; i < 5; i++) {
     const cell = document.getElementById(`cell-${rowIndex}-${i}`);
@@ -199,10 +182,10 @@ function celebrateWin() {
   }
 
   // 5 waves of confetti, 600ms apart
-  const waves = 10;
-  for (let i = 0; i < waves; i++) {
-    setTimeout(() => launchConfetti(), i * 600);
-  }
+const waves = 10;
+for (let i = 0; i < waves; i++) {
+  confettiTimers.push(setTimeout(() => launchConfetti(), i * 600));
+}
 }
 
 function launchConfetti(count = 80) {
