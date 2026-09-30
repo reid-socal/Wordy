@@ -244,8 +244,7 @@ function handleGuess() {
     celebrateWin();
   } else if (gameState.currentAttempt >= gameState.maxAttempts) {
     gameState.status = "lost";
-    messageEl.textContent = `Try Again, the word is something else...`;
-    messageEl.className = "message lose";
+messageEl.textContent = `Try Again, the word was "${gameState.targetWord.toUpperCase()}"`;    messageEl.className = "message lose";
     endGame();
   } else {
     messageEl.textContent = `Attempt ${gameState.currentAttempt}/${gameState.maxAttempts}`;
