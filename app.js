@@ -13,6 +13,9 @@ const gameState = {
 let confettiTimers = [];
 
 
+
+// ========== WORD LIST ==========
+
 // const WORD_LIST = [
 //   "apple", "brave", "crane", "drive", "eagle",
 //   "flame", "grape", "house", "input", "joker",
@@ -22,10 +25,13 @@ let confettiTimers = [];
 //   "zebra"
 // ];
 
-// ========== WORD LIST ==========
-const WORD_LIST = [
-  "cindy"
-];
+const WORD_LIST = WORDS;
+
+
+
+// const WORD_LIST = [
+//   "cindy"
+// ];
 
 const SONG_START = 15;
 const winSong = new Audio("song.m4a");
